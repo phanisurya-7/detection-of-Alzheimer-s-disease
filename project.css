@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(rgba(72, 72, 72, 0.75),rgba(72,72, 72, 0.75)), url("https://i.postimg.cc/RZp76r9Y/background.jpg"); /* Replace 'your-background-image-url.jpg' with the actual URL of your background image */
+    background-size: cover;
+    background-position: calc(1000px,667px);
+    box-sizing: content-box;
+    overflow: hidden;
+    position: relative; 
+}
+
+
+h2 {
+    text-align: center;
+    margin-top: 225px;
+    color: #ffffff;
+}
+#fileInput {
+    display: block;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: calc(1000px,500px);
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+#label-container {
+    text-align: center;
+    margin-top: 20px;
+    color: #efe4e4; 
+}
+
+#label-container div {
+    margin: 5px;
+    font-size: 16px;
+    color: #f4ebeb; 
+}
+
