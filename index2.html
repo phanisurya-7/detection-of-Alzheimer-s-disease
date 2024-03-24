@@ -1,0 +1,203 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)" disabled>
+    <div id="label-container"></div>
+    <div class="image-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        let model, labelContainer, maxPredictions;
+
+
+        async function init() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.disabled = true;
+
+            // Initialize labelContainer variable
+            labelContainer = document.getElementById('label-container');
+            if (!labelContainer) {
+                console.error('Label container not found');
+                return;
+            }
+
+            // Load the model
+            const URL = 'https://teachablemachine.withgoogle.com/models/wsTD1UwYk/'; // Replace 'YOUR_MODEL_URL' with the actual model URL
+            const modelURL = URL + 'model.json';
+            const metadataURL = URL + 'metadata.json';
+
+            try {
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                console.log('Model loaded successfully');
+                fileInput.disabled = false;
+            } catch (error) {
+                console.error('Error loading the model:', error);
+            }
+        }
+
+       // Call init() when the page finishes loading
+        window.addEventListener('load', async () => {
+            await init(); // Wait for model initialization to complete
+        });
+
+        async function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                console.error('No file selected');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const imageDataUrl = event.target.result;
+                const imageElement = new Image();
+                imageElement.src = imageDataUrl;
+                imageElement.onload = async function() {
+                    await predict(imageElement);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+
+        async function predict(imageElement) {
+            if (!model) {
+                console.error('Model not initialized yet');
+                return;
+            }
+
+            // Check if labelContainer is defined
+            if (!labelContainer) {
+                console.error('Label container not found');
+                return;
+            }
+
+            try {
+                const prediction = await model.predict(imageElement);
+                labelContainer.innerHTML = ''; // Clear previous predictions
+
+                for (let i = 0; i < maxPredictions; i++) {
+                    const classPrediction =
+                        prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
+                    if(prediction[i].probability>0.5) labelContainer.innerHTML += `<div>${classPrediction}</div>`;
+                }
+            } catch (error) {
+                console.error('Error predicting:', error);
+            }
+        }
+
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classification Project </title>
+    <meta name="description" content="This website is used to detect the Alzheimer's Disease">
+    <link rel="stylesheet" href="project.css">
+</head>
+<body>
+    <h2>Detection of Alzheimer's Disease</h2>
+    <input type="file" id="fileInput" accept="image/*" onchange="handleImageUpload(event)" disabled>
+    <div id="image-container" class="image-container"></div>
+    <div id="label-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        let model, labelContainer, maxPredictions;
+
+        async function init() {
+            const fileInput = document.getElementById('fileInput');
+            fileInput.disabled = true;
+
+            // Initialize labelContainer variable
+            labelContainer = document.getElementById('label-container');
+            if (!labelContainer) {
+                console.error('Label container not found');
+                return;
+            }
+
+            // Load the model
+            const URL = 'https://teachablemachine.withgoogle.com/models/wsTD1UwYk/';
+            const modelURL = URL + 'model.json';
+            const metadataURL = URL + 'metadata.json';
+
+            try {
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                console.log('Model loaded successfully');
+                fileInput.disabled = false;
+            } catch (error) {
+                console.error('Error loading the model:', error);
+            }
+        }
+
+        // Call init() when the page finishes loading
+        window.addEventListener('load', async () => {
+            await init(); // Wait for model initialization to complete
+        });
+
+        async function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                console.error('No file selected');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = async function(event) {
+                const imageDataUrl = event.target.result;
+                const imageElement = new Image();
+                imageElement.src = imageDataUrl;
+                imageElement.onload = async function() {
+                    displayImage(imageElement);
+                    await predict(imageElement);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayImage(imageElement) {
+            const imageContainer = document.getElementById('image-container');
+            imageContainer.innerHTML = ''; // Clear previous image
+            imageContainer.appendChild(imageElement);
+        }
+
+        async function predict(imageElement) {
+            if (!model) {
+                console.error('Model not initialized yet');
+                return;
+            }
+
+            // Check if labelContainer is defined
+            if (!labelContainer) {
+                console.error('Label container not found');
+                return;
+            }
+
+            try {
+                const prediction = await model.predict(imageElement);
+                labelContainer.innerHTML = ''; // Clear previous predictions
+
+                for (let i = 0; i < maxPredictions; i++) {
+                    const classPrediction =
+                        prediction[i].className + ': ' + prediction[i].probability.toFixed(2);
+                    if(prediction[i].probability>0.5) labelContainer.innerHTML += `<div>${classPrediction}</div>`;
+                }
+            } catch (error) {
+                console.error('Error predicting:', error);
+            }
+        }
+
+    </script>
+</body>
+</html>
